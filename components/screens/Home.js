@@ -178,7 +178,7 @@ const Home = ({navigation}) => {
             >
                 <Icon name='heart'style={{
                     fontSize:18,
-                    color: COLOURS.backgroundMedium,
+                    color: COLOURS.red,
                     padding:12,
                     borderRadius:10,
                     borderWidth:1,
