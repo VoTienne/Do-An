@@ -1,13 +1,20 @@
-import { View, Text,StyleSheet } from 'react-native'
+import { View, Text,StyleSheet,Image } from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLOURS, Items } from '../database/Database';
 import {firebase} from '../firebase/config';
-import { useState } from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import { useState, useContext } from 'react';
 import { useEffect } from 'react';
+import { configureStore } from '@reduxjs/toolkit';
+import themeContext from '../darkmode/themeContext';
+import theme from '../darkmode/theme';
 const Profile = ({navigation}) => {
+    const theme = useContext(themeContext);
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+    const [ image , setImage ] = useState(null);
     const [name,onchangeName] = useState('');
     const [Email,onchangeEmail] = useState('');
      useEffect(() => {
@@ -31,13 +38,39 @@ const Profile = ({navigation}) => {
           alert(error)
         })
       }
+
+      useEffect(() => {
+        (async () => {
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status === 'granted');
+        })();
+      },[]);
+      const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4,3],
+            quality:1,
+        });
+
+        console.log(result);
+
+        if(!result.cancelled){
+            setImage(result.uri);
+        }
+      };
+
+      if(hasGalleryPermission === false) {
+        return <Text>No acces to Internet Storage</Text>
+      }
+
   return (
     <SafeAreaView style={{
         height:'100%',
         width:'100%',
         //justifyContent:'center',
         alignItems:'center',
-        backgroundColor:COLOURS.white
+        backgroundColor:theme.background,
     }}>
       <View style={{
             padding:10,
@@ -64,39 +97,43 @@ const Profile = ({navigation}) => {
             </TouchableOpacity>
             <Text style={{
               fontSize:20,
-              color:COLOURS.black,
+              color:theme.color,
               fontWeight:'400'
             }}>Hồ sơ</Text>
             <View></View>
           </View>
           <View style={{
-            borderWidth:1,
+            //borderWidth:1,
             height:'20%',
             width:'80%',
             justifyContent:'center',
             alignItems:'center'
           }}>
             <View style={{
-                height:60,
-                width:60,
+                height:100,
+                width:100,
                 borderWidth:1,
-                borderRadius:30,
-            }}></View>
+                borderRadius:50,
+                marginTop:30,
+                borderColor:theme.color
+            }}>
+               {image && <Image source={{uri: image}} style={{height:'100%',width:'100%',borderRadius:50,}} />} 
+            </View>
             <View style={{
-                bottom:12,
+                bottom:20,
                 left:22,
                 //borderWidth:1,
-                borderRadius:10,
-                padding:5,
+                borderRadius:20,
+                padding:10,
                 zIndex:1,
-                backgroundColor:COLOURS.blue
+                backgroundColor:COLOURS.backgroundLight
             }}>
-                <TouchableOpacity>
-                    <Icon name='camera'/>
+                <TouchableOpacity onPress={() => pickImage()}>
+                    <Icon name='camera' style={{fontSize:20}}/>
                 </TouchableOpacity>
                 
             </View>
-            <Text>{name.Name}</Text>
+
           </View>
           <View style={{
                 marginTop:10,
@@ -167,7 +204,7 @@ const Profile = ({navigation}) => {
                         <Text style={{
                             fontSize:20,
                             fontWeight:'500',
-                            color:COLOURS.blue
+                            color:theme.blue
                         }}>Đổi mật khẩu</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -176,7 +213,7 @@ const Profile = ({navigation}) => {
                         <Text style={{
                             fontSize:20,
                             fontWeight:'500',
-                            color:COLOURS.blue
+                            color:theme.blue
                         }}>Đăng xuất</Text>
                     </TouchableOpacity>
 

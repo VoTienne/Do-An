@@ -1,13 +1,15 @@
 import { View, Text, ScrollView, TouchableOpacity,Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLOURS, Items } from '../database/Database';
 import { id } from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
+import themeContext from '../darkmode/themeContext';
 
 const MyCart = ({navigation}) => {
+  const theme = useContext(themeContext);
   const [product,setProduct] = useState()
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus',()=>{
@@ -110,7 +112,7 @@ const MyCart = ({navigation}) => {
         }}>
         <Text style={{
           fontSize:18,
-          color:COLOURS.black,
+          color:theme.color,
           fontWeight:'600',
           marginBottom:2,
         }} >
@@ -148,14 +150,16 @@ const MyCart = ({navigation}) => {
     )
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{
+      //backgroundColor:theme.color
+    }}>
       <ScrollView>
         <View style={{
           justifyContent:'center',
           alignItems:'center',
           width:'100%',
           height:'100%',
-          backgroundColor:COLOURS.white,
+          //backgroundColor:theme.color,
         }}>
           <View style={{
             padding:10,
@@ -182,12 +186,13 @@ const MyCart = ({navigation}) => {
             </TouchableOpacity>
             <Text style={{
               fontSize:20,
-              color:COLOURS.black,
+              color:theme.color,
               fontWeight:'400'
             }}>Danh sách yêu thích</Text>
             <View></View>
           </View>
       <View style={{
+          //backgroundColor:theme.color,
           width:'90%',
           marginTop:10,
           flexDirection:'row',

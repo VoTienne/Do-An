@@ -5,8 +5,11 @@ import { COLOURS, Items } from '../database/Database';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import themeContext from '../darkmode/themeContext';
 import { onPress } from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
+import { useContext } from 'react';
 const Productinfo = ({route,navigation}) => {
+  const theme = useContext(themeContext);
   const {productID} = route.params;
   const [product, setProduct] = useState({});
   const width= Dimensions.get('window').width;
@@ -100,7 +103,9 @@ const Productinfo = ({route,navigation}) => {
     )
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{
+      
+    }}>
       <ScrollView>
       <ImageBackground  imageStyle={{resizeMode:'cover', width:'100%', height:'18%',marginBottom:50}}source={product.productImage}>   
       <View style={{
@@ -111,6 +116,7 @@ const Productinfo = ({route,navigation}) => {
             paddingHorizontal:16,
             justifyContent:'space-between',
             alignItems:'center',
+            
             }}>
         <TouchableOpacity 
         onPress={()=>navigation.goBack()}
@@ -128,7 +134,7 @@ const Productinfo = ({route,navigation}) => {
         <View style={{
           marginTop:200,
           paddingHorizontal: 16,
-          backgroundColor:COLOURS.white,
+          backgroundColor:theme.background,
           borderRadius:35,
           height:'100%',
           
@@ -163,7 +169,7 @@ const Productinfo = ({route,navigation}) => {
               marginLeft:50
             }}>
           <Text style={{           
-            fontSize:40,
+            fontSize:30,
             fontWeight:'bold',
             letterSpacing:10,
 
@@ -190,16 +196,10 @@ const Productinfo = ({route,navigation}) => {
            <Text style={{
             fontSize:15,
             fontWeight:'500',
-            //letterSpacing:1,
-            //opacity:0.6,
             lineHeight:20,
-            //color:COLOURS.black,
+            color:theme.color,
             marginTop:-5,     
-            marginBottom:10,
-            
-            
-        }}>
-          
+            marginBottom:10,}}>
           {product.description}
         </Text>
         <View style={{
@@ -215,9 +215,11 @@ const Productinfo = ({route,navigation}) => {
             alignItems:'center'
           }}>
             <Text style={{
+              color:theme.color,
               fontWeight:'500'
             }}>{product.speed}</Text>
             <Text style={{
+              color:theme.color,
               fontSize:13
             }}>Tốc độ tối đa</Text>
           </View>
@@ -227,12 +229,14 @@ const Productinfo = ({route,navigation}) => {
             alignItems:'center'
           }}>
             <Text style={{
+              color:theme.color,
               fontWeight:'500'
             }}>{product.road}</Text>
             <Text style={{
+              color:theme.color,
               fontSize:13
             }}>Quãng đường</Text>
-            <Text>di chuyển</Text>
+            <Text style={{color:theme.color,}}>di chuyển</Text>
           </View>
           <View style={{
             height:'100%',
@@ -240,9 +244,11 @@ const Productinfo = ({route,navigation}) => {
             alignItems:'center'
           }}>
             <Text style={{
+              color:theme.color,
               fontWeight:'500'
             }}>{product.cop}</Text>
             <Text style={{
+              color:theme.color,
               fontSize:13
             }}>Độ rộng cốp xe</Text>            
           </View>          
@@ -259,6 +265,7 @@ const Productinfo = ({route,navigation}) => {
                 color:COLOURS.backgroundDark
               }}>Giá niêm yết </Text>
               <Text style={{
+                color:theme.color,
                 fontWeight:'500',
                 fontSize:20,
               }}>{product.ProductPrice} VNĐ</Text>
@@ -297,8 +304,9 @@ const Productinfo = ({route,navigation}) => {
               color:COLOURS.backgroundDark
             }} name='shield' />
             <Text style={{
-              fontSize:25,
-              fontWeight:'400'
+              color:theme.color,
+              fontSize:20,
+              fontWeight:'500'
             }}>  AN TOÀN</Text>
             </View>
             <View style={{
@@ -331,8 +339,9 @@ const Productinfo = ({route,navigation}) => {
               color:COLOURS.backgroundDark
             }} name='battery' />
             <Text style={{
-              fontSize:25,
-              fontWeight:'400'
+              color:theme.color,
+              fontSize:20,
+              fontWeight:'500'
             }}> Pin</Text>
             </View>
             <View style={{
@@ -364,8 +373,9 @@ const Productinfo = ({route,navigation}) => {
               color:COLOURS.backgroundDark
             }} name='superpowers' />
             <Text style={{
-              fontSize:25,
-              fontWeight:'400'
+              color:theme.color,
+              fontSize:20,
+              fontWeight:'500'
             }}>  ĐỘNG CƠ</Text>
             </View>
             <View style={{
@@ -397,8 +407,9 @@ const Productinfo = ({route,navigation}) => {
               color:COLOURS.backgroundDark
             }} name='microchip' />
             <Text style={{
-              fontSize:25,
-              fontWeight:'400'
+              color:theme.color,
+              fontSize:20,
+              fontWeight:'500'
             }}>  CÔNG NGHỆ</Text>
             </View>
             <View style={{

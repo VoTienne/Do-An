@@ -1,12 +1,14 @@
 import { View, Text, ScrollView, TouchableOpacity,Image, FlatList  } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLOURS, Items } from '../database/Database'
 import { StatusBar } from 'expo-status-bar'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import themeContext from '../darkmode/themeContext'
 
 const Home = ({navigation}) => {
+  const theme = useContext(themeContext);
   const [products,setProducts] = useState([]);
   const [accessory, setAccessory] = useState([]);
 
@@ -89,7 +91,7 @@ const Home = ({navigation}) => {
         }}>
         <Text style={{
           fontSize:18,
-          color:COLOURS.black,
+          color:theme.color,
           fontWeight:'600',
           marginBottom:2,
         }} >
@@ -97,7 +99,7 @@ const Home = ({navigation}) => {
         </Text>
         <Text style={{
           fontWeight:'500',
-          color:COLOURS.blue
+          color:theme.blue,
         }}> {data.ProductPrice} VNĐ</Text>
         </View>       
             <View style={{
@@ -107,10 +109,12 @@ const Home = ({navigation}) => {
               justifyContent:'space-between'
             }} > 
               <Text style={{
+                color:theme.color,
                 fontSize:10,
                 fontWeight:'500'
               }}>Tốc độ</Text>
               <Text style={{
+                color:theme.color,
                 fontSize:10,
                 fontWeight:'500'
               }} >
@@ -124,13 +128,14 @@ const Home = ({navigation}) => {
               justifyContent:'space-between'
             }} > 
               <Text style={{
+                color:theme.color,
                 fontSize:10,
                 fontWeight:'500'
               }}>Quãng đường</Text>
               <Text style={{
                 fontSize:10,
-                fontWeight:'500'
-                
+                fontWeight:'500',
+                color:theme.color,
               }} >
                 {data.road}
               </Text>
@@ -144,7 +149,7 @@ const Home = ({navigation}) => {
       <View style={{
         width:'100%',
         height:'100%',
-        backgroundColor: COLOURS.white,
+        backgroundColor: theme.background,
       }} >
       <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content"  />
       <ScrollView showsVerticalScrollIndicator={false} >
@@ -171,7 +176,7 @@ const Home = ({navigation}) => {
         }}>
           <Text style={{
             fontSize:20,
-            color: COLOURS.black,
+            color: theme.color,
             fontWeight:'bold',
             letterSpacing:1,
             marginBottom:10,
@@ -181,7 +186,7 @@ const Home = ({navigation}) => {
           </Text>
           <Text style={{
             fontSize:14,
-            color: COLOURS.black,
+            color: theme.color,
             fontWeight:'500',
             letterSpacing:1,
             
@@ -200,7 +205,7 @@ const Home = ({navigation}) => {
         }}>
           <Text style={{
             fontSize:18,
-            color: COLOURS.black,
+            color: theme.color,
             fontWeight:'500',
             letterSpacing:1,
           }}> SẢN PHẨM MỚI</Text>
@@ -229,7 +234,7 @@ const Home = ({navigation}) => {
         }}>
           <Text style={{
             fontSize:18,
-            color: COLOURS.black,
+            color: theme.color,
             fontWeight:'500',
             letterSpacing:1,
           }}>TẤT CẢ SẢN PHẨM</Text>

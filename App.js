@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +15,9 @@ import { COLOURS } from './components/database/Database';
 import {firebase} from './components/firebase/config';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { EventRegister } from 'react-native-event-listeners';
+import theme from './components/darkmode/theme';
+import themeContext from './components/darkmode/themeContext';
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
 const MyTabs = () => {
@@ -55,13 +58,17 @@ const MyTabs = () => {
     );
   }
  function App() {
+  
   const [initializing,setInitializing] = useState(true);
   const [user,setUser] = useState();
+
+
   //handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false)
-  }
+  } 
+
 
   useEffect(() => {
     const subsciber = firebase?.auth()?.onAuthStateChanged(onAuthStateChanged);
@@ -97,13 +104,25 @@ const MyTabs = () => {
   );
   }
   export default () => {
+    const [darkMode,setDarkMode] = useState(false);
+    useEffect(() => {
+  const listener = EventRegister.addEventListener('ChangeTheme',(data) => {
+    setDarkMode(data)
+    console.log(data)
+  })
+  return () => {
+    EventRegister.removeAllListeners(listener)
+  }
+},[darkMode])
   return (
-    <NavigationContainer>
+    <themeContext.Provider value={darkMode === true ? theme.dark: theme.light}>
+    <NavigationContainer theme={darkMode === true ? DarkTheme: DefaultTheme}>
       
      <App/>
 
       
     </NavigationContainer>
+    </themeContext.Provider>
   );
 }
 
