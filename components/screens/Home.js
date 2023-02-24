@@ -151,19 +151,10 @@ const Home = ({navigation}) => {
         <View style={{
             width:'100%',
             flexDirection:'row',
-            justifyContent:'space-between',
+            justifyContent:'center',
             padding:16,
         }}>
-            <TouchableOpacity>
-                <Icon name='user'style={{
-                    fontSize:18,
-                    borderWidth:1,
-                    color: COLOURS.backgroundMedium,
-                    padding:12,
-                    borderRadius:10,
-                    backgroundColor: COLOURS.backgroundLight,
-                }} />
-            </TouchableOpacity>
+            
            <View style={{
             height:50,
             width:50
@@ -171,31 +162,20 @@ const Home = ({navigation}) => {
             <Image style={{
               height:50,
               width:50
-            }} source={require('../database/images/products/logo.png')} ></Image>
-           </View>
-            <TouchableOpacity
-            onPress={() =>navigation.navigate('MyCart')}
-            >
-                <Icon name='heart'style={{
-                    fontSize:18,
-                    color: COLOURS.red,
-                    padding:12,
-                    borderRadius:10,
-                    borderWidth:1,
-                    backgroundColor: COLOURS.backgroundLight,
-                }} />
-            </TouchableOpacity>             
+            }} source={require('../database/images/products/logov.png')} ></Image>
+           </View>                      
         </View>
         <View style={{
           alignItems:'center',
           padding:12,
         }}>
           <Text style={{
-            fontSize:26,
+            fontSize:20,
             color: COLOURS.black,
             fontWeight:'bold',
             letterSpacing:1,
             marginBottom:10,
+            maxWidth:'100%'
           }}>
             Chào mừng đến với VINFAST
           </Text>

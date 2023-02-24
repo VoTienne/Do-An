@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity, FlatList, Dimensions,Image,Animated, ImageBackground, Linking, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, FlatList, Dimensions,Image,Animated, ImageBackground, Linking, ToastAndroid, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLOURS, Items } from '../database/Database';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { onPress } from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
 const Productinfo = ({route,navigation}) => {
   const {productID} = route.params;
   const [product, setProduct] = useState({});
@@ -27,9 +28,29 @@ const Productinfo = ({route,navigation}) => {
   };
   
   const payment = () =>{
-    ToastAndroid.show('HÃY ĐẾN CHI NHÁNH VINFAST GẦN NHẤT ĐỂ TIẾP TỤC THỦ TỤC',ToastAndroid.LONG);
-    navigation.navigate('Home');
-  }
+    Alert.alert('Thông báo', 'Hãy đến chi nhánh Vinfast gần nhất để tiếp tục thủ tục !', [
+      {
+        text: 'Ok',
+        onPress: () => navigation.navigate('Home'),
+        style: 'Ok',
+      },
+     
+  ])
+};
+  const favorite = () => {
+    Alert.alert('Đã thêm vào danh sách yêu thích !','Xem danh sách yêu thích ?',[
+      {
+        text:'Có',
+        onPress: () => navigation.navigate('MyCart'),
+        style: 'Có',
+      },
+      {
+        text:'Không',
+        
+        style: 'Không',
+      },
+    ])
+  } ;
 
   const addToCart = async(id) => {
     let itemArray = await AsyncStorage.getItem('cartItems');
@@ -39,10 +60,7 @@ const Productinfo = ({route,navigation}) => {
       array.push(id);
       try {
         await AsyncStorage.setItem('cartItems',JSON.stringify(array));
-        ToastAndroid.show(
-          'Đã thêm vào danh sách yêu thích',
-          ToastAndroid.SHORT,
-        );
+        favorite();
        
       } catch (error) {
         return error;
@@ -53,10 +71,7 @@ const Productinfo = ({route,navigation}) => {
       array.push(id);
       try {
         await AsyncStorage.setItem('cartItems',JSON.stringify(array));
-        ToastAndroid.show(
-          'Đã thêm vào danh sách yêu thích',
-          ToastAndroid.SHORT,
-        );
+        favorite();
        
       } catch (error) {
         return error;

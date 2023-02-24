@@ -1,18 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ImageBackground,Image,Dimensions, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground,Image,Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
 import { COLOURS } from '../database/Database';
+import { firebase } from '../firebase/config';
 const windowHeight = Dimensions.get('window').height;
 export default Login = ({navigation}) => {
   const isValidationOK = () => Email.length > 0 && Password.length > 0
                             && IsValidEmail == true
                             && IsValidPassword == true
-  const [Email,onchangeEmail]=useState('');
+  const [Email,onchangeEmail] = useState('');
   const [IsValidEmail,setValidEmail] = useState('true');
   const [Password,onchangePassword] = useState('');
   const [IsValidPassword,SetValidPassword] = useState('true');
+  loginUser = async ( Email,Password) => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(Email,Password)
+    }catch (error ){
+      alert('Tài khoản không hợp lệ')
+    }
+  }
+ 
+  const forgetPassword = () => {
+    firebase.auth().sendPasswordResetEmail(Email)
+    .then (() => {
+      alert('Đã gửi email đổi mật khẩu !')
+    }).catch((error) => {
+      alert('Hãy nhập Email !')
+    })
+  }
+
   const verifyEmail = (Email) => {
     let regex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
     if(regex.test(Email)) {
@@ -30,67 +49,85 @@ export default Login = ({navigation}) => {
   }
 
   return (
-    <SafeAreaView style={{
-        height:'100%',
-        width:'100%',
-        backgroundColor:COLOURS.white
-    }} > 
-        <View style={{       
-                justifyContent:'center',
-                alignItems:'center'
-        }}>
+    <SafeAreaView  > 
+      <KeyboardAvoidingView>
+    <ImageBackground 
+    source={require('../database/images/products/background.jpg')}
+    imageStyle={{
+      resizeMode:'cover'
+    }}
+    style={{
+    
+       height:'100%',
+        //width:'100%',
+        backgroundColor:COLOURS.white,
+        //justifyContent:'center',
+        alignItems:'center'
+    }}>
         <View style={{
+          //borderWidth:1,
             width:'45%',
-            height:'45%',
-            
+            height:'15%',
+            marginTop:15
         }}>
      <Image 
      style={{
-        resizeMode:'cover',
+        resizeMode:'contain',
         height:'100%',
         width:'100%'}}  
     source={require('../database/images/products/logov.png')}>
 
-    </Image>
+    </Image>     
+</View>
+ <View style={{
+       // borderWidth:1,
+        height:'7%',
+        width:'80%',
+        justifyContent:'center',
+        marginTop:40
+      }}>
+      <Text style={{
+        fontSize:30,
+        fontWeight:'bold'
+      }}>Đăng nhập</Text>
+      </View>
      
-</View>
-
-</View>
-<View style={{flex:1}}>
-  <View style={{
-    height:'30%',
-    width:'100%',
-    marginTop: windowHeight/30,
-    justifyContent:'center',
-    alignItems:'center',
-    }}>
+       <View style={{
+        //borderWidth:1,
+        width:'80%',
+        height:'25%',
+        justifyContent:'center'
+      }}>
+       
+        <View style={styles.textinput}>
+       <View style={styles.icon}>
+  <Icon name='envelope' style={{fontSize:20,color:COLOURS.backgroundDark}}/>
+       </View> 
+ <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss}>
   <TextInput 
-  onChangeText={(text)=>{
-    onchangeEmail(text);
-    const isvalid = verifyEmail(text);
+  onChangeText={(Email)=>{
+    onchangeEmail(Email);
+    const isvalid = verifyEmail(Email);
     isvalid? setValidEmail(true): setValidEmail(false);
   }}
   value={Email}
   placeholderTextColor='black' 
   autoCapitalize='none' 
   placeholder='Email' 
-  style={{
-    height:50,width:'70%',
-    borderBottomColor:'black',
-    borderBottomWidth:2,
-    bottom:10
-    }}/>
-  <Text style={{
-    color:'red',
-    right:75,
-    fontSize:15,
-    fontWeight:'bold'
-    }}>{IsValidEmail? '': 'Email không hợp lệ!'}
+  style={styles.placeholder}/>
+  </TouchableWithoutFeedback>
+   </View>
+   
+  <Text style={styles.textwarn}>{IsValidEmail? '': 'Email không hợp lệ!'}
     </Text>
+    <View style={styles.textinput}>
+       <View style={styles.icon}>
+  <Icon name='lock' style={{fontSize:20,color:COLOURS.backgroundDark}}/>
+       </View>  
   <TextInput 
-  onChangeText={(text)=>{
-    onchangePassword(text);
-    const isvalid = verifyPassword(text);
+  onChangeText={(Password)=>{
+    onchangePassword(Password);
+    const isvalid = verifyPassword(Password);
     isvalid? SetValidPassword(true): SetValidPassword(false);
   }}
   value={Password}
@@ -99,32 +136,25 @@ export default Login = ({navigation}) => {
   placeholderTextColor='black'
     autoCapitalize='none' 
    placeholder='Mật khẩu' 
-   style={{
-    height:50,
-    width:'70%',
-    borderBottomColor:'black',
-    borderBottomWidth:2,
-    marginTop:10
-    }}/>
-  <Text style={{
-    color:'red',
-    marginTop:10,
-    marginRight:80,
-    fontSize:15,
-    fontWeight:'bold'
-    }}>{IsValidPassword?'': 'Mật khẩu phải có ít nhất 5 số !'}
+   style={styles.placeholder}/>
+   
+    </View>
+  <Text style={styles.textwarn}>
+    {IsValidPassword?'': 'Mật khẩu phải có ít nhất 5 số !'}
     </Text>
+    </View>
   <View style={{
     alignItems:'center',
      width:'90%',
      height:60,
-     top:40
+     marginTop:10
+     //top:40
      }}>
 <TouchableOpacity 
   onPress={() => {
-navigation.navigate('Home');
+    loginUser(Email,Password)
 }} 
-disabled = {isValidationOK () == false}
+//disabled = {isValidationOK () == false}
   style={{
   shadowColor: "#000",
   shadowOffset: {
@@ -141,30 +171,56 @@ disabled = {isValidationOK () == false}
      }}> Đăng nhập
      </Text>
 </TouchableOpacity>
-{/* <View style={{width:'100%',height:30,top:30,flexDirection:'row',justifyContent:'space-between'}}>
+ <View style={{width:'100%',height:30,top:30,flexDirection:'row',justifyContent:'space-between'}}>
 <TouchableOpacity 
 onPress={() => {
   navigation.navigate('Signup');
 }}
 
 style={{height:'100%',width:'35%',justifyContent:'center',alignItems:'center'}}>
-<Text style={{fontWeight:'bold',color:'black',}}>Sign Up</Text>
+<Text style={{fontWeight:'bold',color:'black',}}>Đăng kí</Text>
 </TouchableOpacity>
-<TouchableOpacity style={{height:'100%',width:'35%',justifyContent:'center',alignItems:'center'}}>
-<Text style={{fontWeight:'bold',color:'white',}}>Forgot Password ?</Text>
+<TouchableOpacity 
+onPress={() => {forgetPassword()}}
+style={{height:'100%',width:'35%',justifyContent:'center',alignItems:'center'}}>
+<Text style={{fontWeight:'bold',color:COLOURS.black,}}>Quên mật khẩu ?</Text>
 </TouchableOpacity>
-</View> */}
+</View> 
 
-
-  </View>
-  </View>
-  </View>
-  
-  
-
-
-      <StatusBar style="light" />
-     
+</View>
+      <StatusBar style="dark" />
+     </ImageBackground>
+     </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
+const styles = StyleSheet.create({
+placeholder:{
+  height:'100%',
+  padding:5,
+  width:'90%',
+},
+textinput:{
+  height:'25%',
+  width:'100%',
+  flexDirection:'row',
+  borderWidth:1,
+  marginTop:10,
+  borderRadius:10,
+  backgroundColor:COLOURS.backgroundLight,
+  borderColor:COLOURS.backgroundDark
+},
+icon:{
+  height:'100%',
+  width:'10%',
+  justifyContent:'center',
+  alignItems:'center',
+},
+textwarn:{
+  color:'red',
+  marginTop:10,
+  marginRight:80,
+  fontSize:15,
+  fontWeight:'bold'
+}
+})
